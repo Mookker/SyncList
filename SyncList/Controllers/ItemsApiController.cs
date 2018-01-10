@@ -39,6 +39,8 @@ namespace SyncList.Controllers
         public async Task<IActionResult> GetItem(int id)
         {
             var item = await _itemsRepository.Get(id);
+            if (item == null)
+                return NotFound();
 
             return Ok(item);
         }

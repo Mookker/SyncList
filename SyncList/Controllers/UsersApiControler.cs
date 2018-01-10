@@ -25,6 +25,9 @@ namespace SyncList.Controllers
         [Route("/v1/users")]
         public async Task<IActionResult> GetAllUsers([FromQuery]int offset = 0, [FromQuery]int limit = Int32.MaxValue)
         {
+            if (offset < 0 || limit < 0)
+                return BadRequest();
+            
             var users = await _usersRepository.GetAll();
             
             return Ok(users);
@@ -40,7 +43,9 @@ namespace SyncList.Controllers
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _usersRepository.Get(id);
-
+            if (user == null)
+                return NotFound();
+            
             return Ok(user);
         }
         
