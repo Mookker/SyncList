@@ -6,10 +6,17 @@ using SyncList.Models;
 
 namespace SyncList.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ListsApiController : Controller
     {
         private readonly IListsRepository _listsRepository;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listsRepository"></param>
         public ListsApiController(IListsRepository listsRepository)
         {
             _listsRepository = listsRepository;
@@ -21,6 +28,7 @@ namespace SyncList.Controllers
         /// <param name="offset"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
+        [HttpGet]
         [Route("/v1/lists")]
         public async Task<IActionResult> GetAllLists([FromQuery]int offset = 0, [FromQuery]int limit = Int32.MaxValue)
         {
@@ -51,11 +59,11 @@ namespace SyncList.Controllers
         [Route("/v1/lists/{id}")]
         public async Task<IActionResult> DeleteList(int id)
         {
-            var user = await _listsRepository.Get(id);
-            if (user == null)
+            var item = await _listsRepository.Get(id);
+            if (item == null)
                 return NotFound();
             
-            await _listsRepository.Delete(user);
+            await _listsRepository.Delete(item);
             
             return Ok();
         }
@@ -85,7 +93,7 @@ namespace SyncList.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("/v1/lists/{id}")]
-        public async Task<IActionResult> UpdateOrCreateUser([FromRoute] int id, [FromBody]ItemList list)
+        public async Task<IActionResult> UpdateOrCreateList([FromRoute] int id, [FromBody]ItemList list)
         {
             if (list == null || list.Id != id || list.Id == 0)
                 return BadRequest();

@@ -54,7 +54,7 @@ namespace SyncList.Data
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Lists)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<User>(entity =>
