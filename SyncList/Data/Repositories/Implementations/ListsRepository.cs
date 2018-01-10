@@ -8,65 +8,65 @@ using SyncList.Models;
 
 namespace SyncList.Data.Repositories.Implementations
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class UsersRepository : IUsersRepository
+    public class ListsRepository : IListsRepository
     {
         private readonly DataContext _dataContext;
-        public DbSet<User> Table => _dataContext.Users;
-
-        public UsersRepository(DataContext dataContext)
+        public DbSet<ItemList> Table => _dataContext.Lists;
+        
+        public ListsRepository(DataContext dataContext)
         {
             _dataContext = dataContext;
         }
 
         /// <inheritdoc />
-        public async Task<List<User>> GetAll(int offset = 0, int limit = Int32.MaxValue)
+        public async Task<List<ItemList>> GetAll(int offset = 0, int limit = Int32.MaxValue)
         {
-            return await Table.AsNoTracking().OrderBy(u => u.Id).Skip(offset).Take(limit).ToListAsync();
+            return await Table.AsNoTracking().OrderBy(u => u.Id).Skip(offset).Take(limit).Include(l => l.User).ToListAsync();
         }
 
         /// <inheritdoc />
-        public async Task<User> Get(int id)
+        public async Task<ItemList> Get(int id)
         {
             return await Table.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id);
         }
 
         /// <inheritdoc />
-        public async Task<User> Create(User user)
+        public async Task<ItemList> Create(ItemList list)
         {
-            if(user == null)
+            if(list == null)
                 return null;
-                
-            var newUser = await Table.AddAsync(user);
+            
+            list.CreationDate = DateTime.UtcNow;
+            
+            var newList = await Table.AddAsync(list);
             await SaveChanges();
-            return newUser.Entity;
+            return newList.Entity;
         }
 
         /// <inheritdoc />
-        public async Task Delete(User user)
+        public async Task Delete(ItemList list)
         {
-            if(user == null)
+            if(list == null)
                 return;
             
-            Table.Remove(user);
+            Table.Remove(list);
             await SaveChanges();
         }
 
         /// <inheritdoc />
-        public async Task<User> Update(int id, User user)
+        public async Task<ItemList> Update(int id, ItemList list)
         {
-            var existingUser = await Table.SingleOrDefaultAsync(u => u.Id == id);
-            if (existingUser == null)
+            var existingList = await Table.SingleOrDefaultAsync(u => u.Id == id);
+            if (existingList == null)
                 return null;
 
-            existingUser.Email = user.Email;
-            existingUser.Name = user.Name;
+            existingList.User = list.User;
+            existingList.Name = list.Name;
+            existingList.UserId = list.UserId;
             
             await SaveChanges();
 
-            return existingUser;
+            return existingList;
         }
 
         /// <inheritdoc />

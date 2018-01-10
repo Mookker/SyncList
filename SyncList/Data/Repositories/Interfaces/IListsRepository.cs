@@ -5,7 +5,8 @@ using SyncList.Models;
 
 namespace SyncList.Data.Repositories.Interfaces
 {
-    public interface IUsersRepository : IBaseRepository<User>
+    public interface IListsRepository : IBaseRepository<ItemList>
     {
+        
     }
 }

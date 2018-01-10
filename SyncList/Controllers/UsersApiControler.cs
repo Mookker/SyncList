@@ -25,7 +25,7 @@ namespace SyncList.Controllers
         [Route("/v1/users")]
         public async Task<IActionResult> GetAllUsers([FromQuery]int offset = 0, [FromQuery]int limit = Int32.MaxValue)
         {
-            var users = await _usersRepository.GetAllUsers();
+            var users = await _usersRepository.GetAll();
             
             return Ok(users);
         }
@@ -39,7 +39,7 @@ namespace SyncList.Controllers
         [Route("/v1/users/{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = await _usersRepository.GetUser(id);
+            var user = await _usersRepository.Get(id);
 
             return Ok(user);
         }
@@ -53,13 +53,13 @@ namespace SyncList.Controllers
         [Route("/v1/users/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _usersRepository.GetUser(id);
+            var user = await _usersRepository.Get(id);
             if (user == null)
                 return NotFound();
             
-            await _usersRepository.DeleteUser(user);
+            await _usersRepository.Delete(user);
             
-            return Ok(user);
+            return Ok();
         }
         
         /// <summary>
@@ -74,7 +74,7 @@ namespace SyncList.Controllers
             if (user == null)
                 return BadRequest();
             
-            user = await _usersRepository.CreateUser(user);
+            user = await _usersRepository.Create(user);
 
             return Ok(user);
         }
@@ -92,8 +92,16 @@ namespace SyncList.Controllers
             if (user == null || user.Id != id || user.Id == 0)
                 return BadRequest();
 
-            await _usersRepository.UpdateUser(id, user);
-
+            var exists = await _usersRepository.IsItemExist(id);
+            if (exists)
+            {
+                await _usersRepository.Update(id, user);
+            }
+            else
+            {
+                await _usersRepository.Create(user);
+            }
+            
             return Ok(user);
         }
     }

@@ -9,13 +9,73 @@ namespace SyncList.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<ItemList> Lists { get; set; }
-        
+        public virtual DbSet<Item> Items { get; set; }
+        public virtual DbSet<ItemList> Lists { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().ToTable("users");
-            modelBuilder.Entity<ItemList>().ToTable("lists");
+            modelBuilder.Entity<Item>(entity =>
+            {
+                entity.ToTable("items");
+
+                entity.HasIndex(e => e.Id)
+                    .IsUnique();
+                
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name).HasColumnName("name");
+            });
+
+            modelBuilder.Entity<ItemList>(entity =>
+            {
+                entity.ToTable("lists");
+
+                entity.HasIndex(e => e.Id)
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.CreationDate)
+                    .IsRequired()
+                    .HasColumnName("creation_date")
+                    .HasColumnType("DATE");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Lists)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("users");
+
+                entity.HasIndex(e => e.Id)
+                    .IsUnique();
+                
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasColumnName("email");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
+            });
         }
     }
 }
