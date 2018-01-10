@@ -3,6 +3,8 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <LangVersion>7</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>SyncList.SyncListApi</AssemblyName>
+    <RootNamespace>SyncList.SyncListApi</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
@@ -17,5 +19,11 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj">
+      <Project>{1E10DD1B-8920-4250-B7A5-4E4F1697CF35}</Project>
+      <Name>CommonLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

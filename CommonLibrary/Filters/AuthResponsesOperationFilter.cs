@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SyncList.Filters
+namespace SyncList.CommonLibrary.Filters
 {
     public class AuthResponsesOperationFilter : IOperationFilter
     {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SyncList.Data.Repositories.Interfaces;
-using SyncList.Models;
+using SyncList.SyncListApi.Data.Repositories.Interfaces;
+using SyncList.SyncListApi.Models;
 
-namespace SyncList.Data.Repositories.Implementations
+namespace SyncList.SyncListApi.Data.Repositories.Implementations
 {
     public class ListsRepository : IListsRepository
     {
@@ -76,7 +76,7 @@ namespace SyncList.Data.Repositories.Implementations
         }
 
         /// <inheritdoc />
-        public async Task<bool> IsItemExist(int id)
+        public async Task<bool> Exists(int id)
         {
             return await Table.AsNoTracking().AnyAsync(u => u.Id == id);
         }

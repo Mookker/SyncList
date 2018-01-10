@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using SyncList.Controllers;
-using SyncList.Data.Repositories.Interfaces;
-using SyncList.Models;
+using SyncList.CommonLibrary.Exceptions;
+using SyncList.SyncListApi.Controllers;
+using SyncList.SyncListApi.Data.Repositories.Interfaces;
+using SyncList.SyncListApi.Models;
 using Xunit;
 
-namespace SyncList.Tests
+namespace SyncList.SyncListApi.Tests
 {
     public class UsersApiControlerTests
     {
@@ -57,11 +58,10 @@ namespace SyncList.Tests
         [Fact]
         public async Task UsersApiControler_GetAllUsers_Failed_Negative()
         {
-            var result = await _controller.GetAllUsers(-1, Int32.MaxValue);
-            Assert.True(result is BadRequestResult);
+            await Assert.ThrowsAsync<InputDataValidationException>(async() =>await _controller.GetAllUsers(-1, Int32.MaxValue));
             
-            result = await _controller.GetAllUsers(0, -1);
-            Assert.True(result is BadRequestResult);
+            await Assert.ThrowsAsync<InputDataValidationException>(async() =>await _controller.GetAllUsers(0, -1));
+
         }
 
         [Fact]
@@ -82,8 +82,7 @@ namespace SyncList.Tests
         [Fact]
         public async Task UsersApiControler_GetUser_NotFound()
         {
-            var result = await _controller.GetUser(0);
-            Assert.True(result is NotFoundResult);
+            await Assert.ThrowsAsync<ResourceNotFoundException>(async() =>await _controller.GetUser(0));
         }
     }
 }

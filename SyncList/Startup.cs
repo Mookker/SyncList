@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml.XPath;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,12 +11,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using SyncList.Data;
-using SyncList.Data.Repositories.Implementations;
-using SyncList.Data.Repositories.Interfaces;
-using SyncList.Filters;
+using SyncList.CommonLibrary.Filters;
+using SyncList.SyncListApi.Data;
+using SyncList.SyncListApi.Data.Repositories.Implementations;
+using SyncList.SyncListApi.Data.Repositories.Interfaces;
 
-namespace SyncList
+namespace SyncList.SyncListApi
 {
     public class Startup
     {
@@ -67,7 +68,6 @@ namespace SyncList
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseMvc();
             
             

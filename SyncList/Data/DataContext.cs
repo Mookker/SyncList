@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SyncList.Models;
+using SyncList.SyncListApi.Models;
 
-namespace SyncList.Data
+namespace SyncList.SyncListApi.Data
 {
     public class DataContext : DbContext
     {

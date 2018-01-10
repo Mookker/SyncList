@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace SyncList.Data.Repositories.Interfaces
+namespace SyncList.SyncListApi.Data.Repositories.Interfaces
 {
     public interface IBaseRepository<T> where T : class, new()
     {
@@ -58,6 +58,6 @@ namespace SyncList.Data.Repositories.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<bool> IsItemExist(int id);
+        Task<bool> Exists(int id);
     }
 }

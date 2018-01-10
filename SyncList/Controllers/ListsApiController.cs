@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SyncList.Data.Repositories.Interfaces;
-using SyncList.Models;
+using SyncList.CommonLibrary.Validation;
+using SyncList.SyncListApi.Data.Repositories.Interfaces;
+using SyncList.SyncListApi.Models;
 
-namespace SyncList.Controllers
+namespace SyncList.SyncListApi.Controllers
 {
     /// <summary>
     /// 
@@ -12,14 +13,16 @@ namespace SyncList.Controllers
     public class ListsApiController : Controller
     {
         private readonly IListsRepository _listsRepository;
+        private readonly IItemsRepository _itemsRepository;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="listsRepository"></param>
-        public ListsApiController(IListsRepository listsRepository)
+        /// <param name="itemsRepository"></param>
+        public ListsApiController(IListsRepository listsRepository, IItemsRepository itemsRepository)
         {
             _listsRepository = listsRepository;
+            _itemsRepository = itemsRepository;
         }
         
         /// <summary>
@@ -32,6 +35,8 @@ namespace SyncList.Controllers
         [Route("/v1/lists")]
         public async Task<IActionResult> GetAllLists([FromQuery]int offset = 0, [FromQuery]int limit = Int32.MaxValue)
         {
+            Validator.Assert(offset >= 0 && limit >= 0, ValidationAreas.InputParameters);
+                
             var lists = await _listsRepository.GetAll(offset, limit);
             return Ok(lists);
         }
@@ -46,8 +51,7 @@ namespace SyncList.Controllers
         public async Task<IActionResult> GetList(int id)
         {
             var list = await _listsRepository.Get(id);
-            if (list == null)
-                return NotFound();
+            Validator.Assert(list != null, ValidationAreas.Exists);
             
             return Ok(list);
         }
@@ -61,11 +65,11 @@ namespace SyncList.Controllers
         [Route("/v1/lists/{id}")]
         public async Task<IActionResult> DeleteList(int id)
         {
-            var item = await _listsRepository.Get(id);
-            if (item == null)
-                return NotFound();
+            var list = await _listsRepository.Get(id);
             
-            await _listsRepository.Delete(item);
+            Validator.Assert(list != null, ValidationAreas.Exists);
+            
+            await _listsRepository.Delete(list);
             
             return Ok();
         }
@@ -79,8 +83,7 @@ namespace SyncList.Controllers
         [Route("/v1/lists/")]
         public async Task<IActionResult> CreateUser([FromBody]ItemList list)
         {
-            if (list == null)
-                return BadRequest();
+            Validator.Assert(list != null, ValidationAreas.InputParameters);
             
             list = await _listsRepository.Create(list);
 
@@ -97,10 +100,9 @@ namespace SyncList.Controllers
         [Route("/v1/lists/{id}")]
         public async Task<IActionResult> UpdateOrCreateList([FromRoute] int id, [FromBody]ItemList list)
         {
-            if (list == null || list.Id != id || list.Id == 0)
-                return BadRequest();
+            Validator.Assert(list != null && list.Id == id && list.Id != 0, ValidationAreas.InputParameters);
 
-            var exists = await _listsRepository.IsItemExist(id);
+            var exists = await _listsRepository.Exists(id);
             if (exists)
             {
                 await _listsRepository.Update(id, list);
@@ -111,6 +113,24 @@ namespace SyncList.Controllers
             }
             
             return Ok(list);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listId"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("/v1/lists/{listId}/items/{itemId}")]
+        public async Task<IActionResult> AddItemToList([FromRoute] int listId, [FromRoute] int itemId)
+        {
+            var listExists = await _listsRepository.Exists(listId);
+            var itemExists = await _itemsRepository.Exists(itemId);
+            
+            Validator.Assert(listExists, ValidationAreas.InputParameters);
+            
+            return Ok();
         }
     }
 }

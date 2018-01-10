@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SyncList.Models;
+using SyncList.SyncListApi.Models;
 
-namespace SyncList.Data.Repositories.Interfaces
+namespace SyncList.SyncListApi.Data.Repositories.Interfaces
 {
     public interface IListsRepository : IBaseRepository<ItemList>
     {

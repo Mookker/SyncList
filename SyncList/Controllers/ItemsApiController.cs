@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SyncList.Data.Repositories.Interfaces;
-using SyncList.Models;
+using SyncList.CommonLibrary.Validation;
+using SyncList.SyncListApi.Data.Repositories.Interfaces;
+using SyncList.SyncListApi.Models;
 
-namespace SyncList.Controllers
+namespace SyncList.SyncListApi.Controllers
 {
     public class ItemsApiController : Controller
     {
         private readonly IItemsRepository _itemsRepository;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="itemsRepository"></param>
         public ItemsApiController(IItemsRepository itemsRepository)
         {
             _itemsRepository = itemsRepository;
@@ -25,6 +30,8 @@ namespace SyncList.Controllers
         [Route("/v1/items")]
         public async Task<IActionResult> GetAllItems([FromQuery]int offset = 0, [FromQuery]int limit = Int32.MaxValue)
         {
+            Validator.Assert(offset >= 0 && limit >= 0, ValidationAreas.InputParameters);
+                
             var items = await _itemsRepository.GetAll(offset, limit);
             return Ok(items);
         }
@@ -39,8 +46,8 @@ namespace SyncList.Controllers
         public async Task<IActionResult> GetItem(int id)
         {
             var item = await _itemsRepository.Get(id);
-            if (item == null)
-                return NotFound();
+
+            Validator.Assert(item != null, ValidationAreas.Exists);
 
             return Ok(item);
         }
@@ -55,8 +62,7 @@ namespace SyncList.Controllers
         public async Task<IActionResult> DeleteItem(int id)
         {
             var item = await _itemsRepository.Get(id);
-            if (item == null)
-                return NotFound();
+            Validator.Assert(item != null, ValidationAreas.Exists);
             
             await _itemsRepository.Delete(item);
             
@@ -72,8 +78,7 @@ namespace SyncList.Controllers
         [Route("/v1/items/")]
         public async Task<IActionResult> CreateItem([FromBody]Item item)
         {
-            if (item == null)
-                return BadRequest();
+            Validator.Assert(item != null, ValidationAreas.InputParameters);
             
             item = await _itemsRepository.Create(item);
 
@@ -90,10 +95,9 @@ namespace SyncList.Controllers
         [Route("/v1/items/{id}")]
         public async Task<IActionResult> UpdateOrCreateItem([FromRoute] int id, [FromBody]Item item)
         {
-            if (item == null || item.Id != id || item.Id == 0)
-                return BadRequest();
+            Validator.Assert(item != null && item.Id == id && item.Id != 0, ValidationAreas.InputParameters);
 
-            var exists = await _itemsRepository.IsItemExist(id);
+            var exists = await _itemsRepository.Exists(id);
             if (exists)
             {
                 await _itemsRepository.Update(id, item);

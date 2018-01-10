@@ -1,7 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SyncList.Models
+namespace SyncList.SyncListApi.Models
 {
     public class ItemList
     {

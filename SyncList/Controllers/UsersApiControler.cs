@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SyncList.Data.Repositories.Interfaces;
-using SyncList.Models;
+using SyncList.CommonLibrary.Validation;
+using SyncList.SyncListApi.Data.Repositories.Interfaces;
+using SyncList.SyncListApi.Models;
 
-namespace SyncList.Controllers
+namespace SyncList.SyncListApi.Controllers
 {
     public class UsersApiControler : Controller
     {
@@ -25,8 +26,7 @@ namespace SyncList.Controllers
         [Route("/v1/users")]
         public async Task<IActionResult> GetAllUsers([FromQuery]int offset = 0, [FromQuery]int limit = Int32.MaxValue)
         {
-            if (offset < 0 || limit < 0)
-                return BadRequest();
+            Validator.Assert(offset >= 0 && limit >= 0, ValidationAreas.InputParameters);
             
             var users = await _usersRepository.GetAll();
             
@@ -43,8 +43,8 @@ namespace SyncList.Controllers
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _usersRepository.Get(id);
-            if (user == null)
-                return NotFound();
+            
+            Validator.Assert(user != null, ValidationAreas.Exists);
             
             return Ok(user);
         }
@@ -59,9 +59,9 @@ namespace SyncList.Controllers
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _usersRepository.Get(id);
-            if (user == null)
-                return NotFound();
             
+            Validator.Assert(user != null, ValidationAreas.Exists);
+
             await _usersRepository.Delete(user);
             
             return Ok();
@@ -76,8 +76,7 @@ namespace SyncList.Controllers
         [Route("/v1/users/")]
         public async Task<IActionResult> CreateUser([FromBody]User user)
         {
-            if (user == null)
-                return BadRequest();
+            Validator.Assert(user != null, ValidationAreas.InputParameters);
             
             user = await _usersRepository.Create(user);
 
@@ -94,10 +93,9 @@ namespace SyncList.Controllers
         [Route("/v1/users/{id}")]
         public async Task<IActionResult> UpdateOrCreateUser([FromRoute] int id, [FromBody]User user)
         {
-            if (user == null || user.Id != id || user.Id == 0)
-                return BadRequest();
+            Validator.Assert(user != null && user.Id == id && user.Id != 0, ValidationAreas.InputParameters);
 
-            var exists = await _usersRepository.IsItemExist(id);
+            var exists = await _usersRepository.Exists(id);
             if (exists)
             {
                 await _usersRepository.Update(id, user);

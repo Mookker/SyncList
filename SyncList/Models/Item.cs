@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SyncList.Models
+﻿namespace SyncList.SyncListApi.Models
 {
     public partial class Item
     {
