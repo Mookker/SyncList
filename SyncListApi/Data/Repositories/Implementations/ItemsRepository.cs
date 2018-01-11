@@ -14,12 +14,10 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
     /// </summary>
     public class ItemsRepository : BaseRepository<Item>, IItemsRepository
     {
-        private readonly DataContext _dataContext;
         public override DbSet<Item> Table => _dataContext.Items;
 
-        public ItemsRepository(DataContext dataContext)
+        public ItemsRepository(DataContext dataContext) : base(dataContext)
         {
-            _dataContext = dataContext;
         }
 
         /// <inheritdoc />

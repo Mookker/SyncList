@@ -13,12 +13,14 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
     /// </summary>
     public class UsersRepository : BaseRepository<User>, IUsersRepository
     {
-        private readonly DataContext _dataContext;
         public override DbSet<User> Table => _dataContext.Users;
 
-        public UsersRepository(DataContext dataContext)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataContext"></param>
+        public UsersRepository(DataContext dataContext) : base(dataContext)
         {
-            _dataContext = dataContext;
         }
 
         /// <inheritdoc />

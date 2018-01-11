@@ -13,16 +13,13 @@ namespace SyncList.SyncListApi.Controllers
     public class ListsApiController : Controller
     {
         private readonly IListsRepository _listsRepository;
-        private readonly IItemsRepository _itemsRepository;
 
         /// <summary>
         /// </summary>
         /// <param name="listsRepository"></param>
-        /// <param name="itemsRepository"></param>
-        public ListsApiController(IListsRepository listsRepository, IItemsRepository itemsRepository)
+        public ListsApiController(IListsRepository listsRepository)
         {
             _listsRepository = listsRepository;
-            _itemsRepository = itemsRepository;
         }
         
         /// <summary>
@@ -113,25 +110,6 @@ namespace SyncList.SyncListApi.Controllers
             }
             
             return Ok(list);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="listId"></param>
-        /// <param name="itemId"></param>
-        /// <returns></returns>
-        [HttpPut]
-        [Route("/v1/lists/{listId}/items/{itemId}")]
-        public async Task<IActionResult> AddItemToList([FromRoute] int listId, [FromRoute] int itemId)
-        {
-            var listExists = await _listsRepository.Exists(listId);
-            var itemExists = await _itemsRepository.Exists(itemId);
-            
-            Validator.Assert(listExists, ValidationAreas.Exists);
-            Validator.Assert(itemExists, ValidationAreas.Exists);
-            
-            return Ok();
         }
     }
 }

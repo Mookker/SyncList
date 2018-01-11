@@ -10,16 +10,14 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
 {
     public class ItemsListRelationsRepository : BaseRepository<ItemsListRelation>, IItemsListRelationsRepository
     {
-        private readonly DataContext _dataContext;
         public override DbSet<ItemsListRelation> Table => _dataContext.ItemsListRelations;
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dataContext"></param>
-        public ItemsListRelationsRepository(DataContext dataContext)
+        public ItemsListRelationsRepository(DataContext dataContext) : base(dataContext)
         {
-            _dataContext = dataContext;
         }
 
         /// <inheritdoc />

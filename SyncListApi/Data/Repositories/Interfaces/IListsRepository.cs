@@ -7,6 +7,5 @@ namespace SyncList.SyncListApi.Data.Repositories.Interfaces
 {
     public interface IListsRepository : IBaseRepository<ItemList>
     {
-        
     }
 }
