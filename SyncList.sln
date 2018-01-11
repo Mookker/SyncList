@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncList", "SyncList\SyncList.csproj", "{AC7E2132-C1D0-4D5F-AD9B-BCD36119832C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncListApi", "SyncListApi\SyncListApi.csproj", "{AC7E2132-C1D0-4D5F-AD9B-BCD36119832C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncList.Tests", "SyncList.Tests\SyncList.Tests.csproj", "{A5F82F65-0C03-4DAF-9ECF-C8D756B8D643}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncListApi.Tests", "SyncListApi.Tests\SyncListApi.Tests.csproj", "{A5F82F65-0C03-4DAF-9ECF-C8D756B8D643}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLibrary", "CommonLibrary\CommonLibrary.csproj", "{1E10DD1B-8920-4250-B7A5-4E4F1697CF35}"
 EndProject
