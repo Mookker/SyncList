@@ -7,6 +7,9 @@ using SyncList.SyncListApi.Models;
 
 namespace SyncList.SyncListApi.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ItemsApiController : Controller
     {
         private readonly IItemsRepository _itemsRepository;

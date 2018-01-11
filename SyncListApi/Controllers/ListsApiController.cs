@@ -128,7 +128,8 @@ namespace SyncList.SyncListApi.Controllers
             var listExists = await _listsRepository.Exists(listId);
             var itemExists = await _itemsRepository.Exists(itemId);
             
-            Validator.Assert(listExists, ValidationAreas.InputParameters);
+            Validator.Assert(listExists, ValidationAreas.Exists);
+            Validator.Assert(itemExists, ValidationAreas.Exists);
             
             return Ok();
         }

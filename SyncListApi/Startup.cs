@@ -12,6 +12,7 @@ using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using SyncList.CommonLibrary.Filters;
+using SyncList.CommonLibrary.Middlewares;
 using SyncList.SyncListApi.Data;
 using SyncList.SyncListApi.Data.Repositories.Implementations;
 using SyncList.SyncListApi.Data.Repositories.Interfaces;
@@ -51,6 +52,7 @@ namespace SyncList.SyncListApi
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IListsRepository, ListsRepository>();
             services.AddScoped<IItemsRepository, ItemsRepository>();
+            services.AddScoped<IItemsListRelationsRepository, ItemsListRelationsRepository>();
             
             services.AddMvc().AddJsonOptions(options => {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -68,6 +70,7 @@ namespace SyncList.SyncListApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseMvc();
             
             

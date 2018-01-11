@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -12,11 +13,10 @@ using Xunit;
 
 namespace SyncList.SyncListApi.Tests
 {
-    public class UsersApiControlerTests
+    public class UsersApiControllerTests
     {
-        private UsersApiControler _controller;
-        private Mock<IUsersRepository> _usersRepository;
-        
+        private readonly UsersApiController _controller;
+
         private static List<User> users = new List<User>()
         {
             new User() {Email = "test@test.test", Name = "test", Id = 1},
@@ -24,20 +24,27 @@ namespace SyncList.SyncListApi.Tests
             new User() {Email = "test2@test.test", Name = "test2", Id = 3}
         };
         
-        public UsersApiControlerTests()
+        public UsersApiControllerTests()
         {
-            _usersRepository = new Mock<IUsersRepository>();
+            var usersRepository = new Mock<IUsersRepository>();
             
-            _controller = new UsersApiControler(_usersRepository.Object);
-            _usersRepository.Setup(ur => ur.GetAll(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(users);
+            _controller = new UsersApiController(usersRepository.Object);
+            usersRepository.Setup(ur => ur.GetAll(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(users);
             
-            _usersRepository.Setup(ur => ur.Get(It.IsAny<int>()))
+            usersRepository.Setup(ur => ur.Get(It.IsAny<int>()))
                 .ReturnsAsync((int i) => users.FirstOrDefault(u => u.Id == i));
+            
+            usersRepository.Setup(ur => ur.Create(It.IsAny<User>()))
+                .ReturnsAsync((User u) =>
+                {
+                    users.Add(u);
+                    return u;
+                });
 
         }
         
         [Fact]
-        public async Task UsersApiControler_GetAllUsers_Success()
+        public async Task UsersApiController_GetAllUsers_Success()
         {
             var result = await _controller.GetAllUsers();
             
@@ -56,7 +63,7 @@ namespace SyncList.SyncListApi.Tests
         }
         
         [Fact]
-        public async Task UsersApiControler_GetAllUsers_Failed_Negative()
+        public async Task UsersApiController_GetAllUsers_Failed_Negative()
         {
             await Assert.ThrowsAsync<InputDataValidationException>(async() =>await _controller.GetAllUsers(-1, Int32.MaxValue));
             
@@ -65,24 +72,38 @@ namespace SyncList.SyncListApi.Tests
         }
 
         [Fact]
-        public async Task UsersApiControler_GetUser_Success()
+        public async Task UsersApiController_GetUser_Success()
         {
             var result = await _controller.GetUser(1);
-            Assert.True(result is OkObjectResult);
             
-            var userResult = (result as OkObjectResult).Value as User;
+            var userResult = (result as OkObjectResult)?.Value as User;
             var user = users.FirstOrDefault(u => u.Id == 1);
             
             Assert.NotNull(user);
             Assert.NotNull(userResult);
             
-            Assert.True(userResult.Id == user.Id && userResult.Email == user.Email && userResult.Name == user.Name);
+            Assert.True(userResult.Equals(user));
         }
         
         [Fact]
-        public async Task UsersApiControler_GetUser_NotFound()
+        public async Task UsersApiController_GetUser_NotFound()
         {
             await Assert.ThrowsAsync<ResourceNotFoundException>(async() =>await _controller.GetUser(0));
+        }
+
+        [Fact]
+        public async Task UsersApiController_CreateUser_Success()
+        {
+            var newUser = new User() {Id = 4, Email = "test4@test.test", Name = "Test4"};
+            var result = await _controller.CreateUser(newUser);
+            var userResult = (result as OkObjectResult)?.Value as User;
+            Assert.NotNull(userResult);
+            Assert.True(userResult.Equals(newUser));
+
+            var checkAdded = await _controller.GetUser(4);
+            userResult = (checkAdded as OkObjectResult)?.Value as User;
+            Assert.NotNull(userResult);
+            Assert.True(userResult.Equals(newUser));
         }
     }
 }

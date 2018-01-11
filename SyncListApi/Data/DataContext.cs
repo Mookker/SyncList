@@ -12,7 +12,8 @@ namespace SyncList.SyncListApi.Data
         public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<ItemList> Lists { get; set; }
         public virtual DbSet<User> Users { get; set; }
-
+        public virtual DbSet<ItemsListRelation> ItemsListRelations { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Item>(entity =>
@@ -56,7 +57,34 @@ namespace SyncList.SyncListApi.Data
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+            
+            modelBuilder.Entity<ItemsListRelation>(entity =>
+            {
+                entity.ToTable("items_lists");
 
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.IsActive)
+                    .HasColumnName("is_active")
+                    .HasColumnType("boolean");
+
+                entity.Property(e => e.ItemId).HasColumnName("item_id");
+
+                entity.Property(e => e.ListId).HasColumnName("list_id");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.ItemListRelations)
+                    .HasForeignKey(d => d.ItemId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(d => d.ItemList)
+                    .WithMany(p => p.ItemListRelations)
+                    .HasForeignKey(d => d.ListId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+            
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("users");

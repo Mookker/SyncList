@@ -7,11 +7,18 @@ using SyncList.SyncListApi.Models;
 
 namespace SyncList.SyncListApi.Controllers
 {
-    public class UsersApiControler : Controller
+    /// <summary>
+    /// 
+    /// </summary>
+    public class UsersApiController : Controller
     {
         private readonly IUsersRepository _usersRepository;
 
-        public UsersApiControler(IUsersRepository usersRepository)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="usersRepository"></param>
+        public UsersApiController(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
         }

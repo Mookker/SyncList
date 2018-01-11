@@ -12,10 +12,10 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
     /// <summary>
     /// 
     /// </summary>
-    public class ItemsRepository : IItemsRepository
+    public class ItemsRepository : BaseRepository<Item>, IItemsRepository
     {
         private readonly DataContext _dataContext;
-        public DbSet<Item> Table => _dataContext.Items;
+        public override DbSet<Item> Table => _dataContext.Items;
 
         public ItemsRepository(DataContext dataContext)
         {
@@ -23,40 +23,7 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
         }
 
         /// <inheritdoc />
-        public async Task<List<Item>> GetAll(int offset = 0, int limit = Int32.MaxValue)
-        {
-            return await Table.AsNoTracking().OrderBy(u => u.Id).Skip(offset).Take(limit).ToListAsync();
-        }
-
-        /// <inheritdoc />
-        public async Task<Item> Get(int id)
-        {
-            return await Table.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id);
-        }
-
-        /// <inheritdoc />
-        public async Task<Item> Create(Item item)
-        {
-            if(item == null)
-                return null;
-                
-            var newUser = await Table.AddAsync(item);
-            await SaveChanges();
-            return newUser.Entity;
-        }
-
-        /// <inheritdoc />
-        public async Task Delete(Item item)
-        {
-            if(item == null)
-                return;
-            
-            Table.Remove(item);
-            await SaveChanges();
-        }
-
-        /// <inheritdoc />
-        public async Task<Item> Update(int id, Item item)
+        public override async Task<Item> Update(int id, Item item)
         {
             var existingUser = await Table.SingleOrDefaultAsync(u => u.Id == id);
             if (existingUser == null)
@@ -69,16 +36,5 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
             return existingUser;
         }
 
-        /// <inheritdoc />
-        public async Task SaveChanges()
-        {
-            await _dataContext.SaveChangesAsync();
-        }
-
-        /// <inheritdoc />
-        public async Task<bool> Exists(int id)
-        {
-            return await Table.AsNoTracking().AnyAsync(u => u.Id == id);
-        }
     }
 }

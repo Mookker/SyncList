@@ -2,12 +2,21 @@
 
 namespace SyncList.SyncListApi.Models
 {
-    public class User
+    public class User : BaseModel
     {
-        public int Id { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
         
         public List<ItemList> Lists { get; set; }
+
+        /// <summary>
+        /// Checks if users are the same
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public bool Equals(User obj)
+        {
+            return Id == obj.Id && Email == obj.Email && Name == obj.Name;
+        }
     }
 }

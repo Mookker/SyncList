@@ -1,8 +1,10 @@
-﻿namespace SyncList.SyncListApi.Models
+﻿using System.Collections.Generic;
+
+namespace SyncList.SyncListApi.Models
 {
-    public partial class Item
+    public partial class Item : BaseModel
     {
-        public long Id { get; set; }
         public string Name { get; set; }
+        public ICollection<ItemsListRelation> ItemListRelations { get; set; }
     }
 }
