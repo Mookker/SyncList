@@ -85,7 +85,7 @@ namespace SyncList.SyncListApi.Controllers
                 {
                     foreach (var res in result.ItemList.ItemListRelations)
                     {
-                        listWithItems.Items.Add(res.Item);
+                        listWithItems.Items.Add(new CachedItem(res.Item, res.IsActive));
                     }
 
                     await _itemsInListCacheManager.AddList(listWithItems);

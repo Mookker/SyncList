@@ -13,7 +13,7 @@ namespace SyncList.SyncListApi.CachingManagement.Models
         /// </summary>
         public ListWithItemsCache()
         {
-            Items = new List<Item>();
+            Items = new List<CachedItem>();
         }
         
         /// <summary>
@@ -28,6 +28,6 @@ namespace SyncList.SyncListApi.CachingManagement.Models
         /// <summary>
         /// Items in the list
         /// </summary>
-        public List<Item> Items { get; set; }
+        public List<CachedItem> Items { get; set; }
     }
 }

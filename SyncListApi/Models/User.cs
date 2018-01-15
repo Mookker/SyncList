@@ -4,19 +4,33 @@ namespace SyncList.SyncListApi.Models
 {
     public class User : BaseModel
     {
+        protected bool Equals(User other)
+        {
+            return string.Equals(Email, other.Email) && string.Equals(Name, other.Name) && Equals(Lists, other.Lists);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((User) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (Email != null ? Email.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Name != null ? Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Lists != null ? Lists.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
         public string Email { get; set; }
         public string Name { get; set; }
         
         public List<ItemList> Lists { get; set; }
-
-        /// <summary>
-        /// Checks if users are the same
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public bool Equals(User obj)
-        {
-            return Id == obj.Id && Email == obj.Email && Name == obj.Name;
-        }
     }
 }

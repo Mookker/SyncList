@@ -42,7 +42,7 @@ namespace SyncList.SyncListApi.CachingManagement.Implementations
         }
 
         /// <inheritdoc />
-        public async Task<bool> AddItemToList(int listId, Item item)
+        public async Task<bool> AddItemToList(int listId, CachedItem item)
         {
             var list = await GetList(listId);
             if (list == null)

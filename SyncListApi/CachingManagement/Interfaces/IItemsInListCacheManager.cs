@@ -22,14 +22,14 @@ namespace SyncList.SyncListApi.CachingManagement.Interfaces
         /// <param name="list"></param>
         /// <returns></returns>
         Task AddList(ListWithItemsCache list);
-        
+
         /// <summary>
         /// Adds item for proper list
         /// </summary>
         /// <param name="listId"></param>
         /// <param name="item"></param>
         /// <returns>True if added. False if not, or list is not cached before</returns>
-        Task<bool> AddItemToList(int listId, Item item);
+        Task<bool> AddItemToList(int listId, CachedItem item);
         
         /// <summary>
         /// Gets list with items
