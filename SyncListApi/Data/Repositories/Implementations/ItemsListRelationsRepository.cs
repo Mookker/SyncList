@@ -35,5 +35,17 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
 
             return existingRelation;
         }
+
+        /// <inheritdoc />
+        public async Task<ItemsListRelation> GetListWithItems(int listId)
+        {
+            var result = await Table
+                .Include(r => r.ItemList)
+                .Include(r => r.Item)
+                .Where(r => r.ListId == listId)
+                .ToListAsync();
+            
+            return result?.FirstOrDefault();
+        }
     }
 }

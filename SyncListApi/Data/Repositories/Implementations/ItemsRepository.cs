@@ -33,6 +33,15 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
 
             return existingUser;
         }
+        
+        /// <inheritdoc />
+        public async Task<List<ItemsListRelation>> GetListWithItems(int listId)
+        {
+//            var result = await Table.Include(l => l.ItemListRelations.
+//            
+//            return result;
 
+            return null;
+        }
     }
 }

@@ -13,6 +13,8 @@ using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using SyncList.CommonLibrary.Filters;
 using SyncList.CommonLibrary.Middlewares;
+using SyncList.SyncListApi.CachingManagement.Implementations;
+using SyncList.SyncListApi.CachingManagement.Interfaces;
 using SyncList.SyncListApi.Data;
 using SyncList.SyncListApi.Data.Repositories.Implementations;
 using SyncList.SyncListApi.Data.Repositories.Interfaces;
@@ -49,10 +51,20 @@ namespace SyncList.SyncListApi
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("SqlLite")));
 
+            
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetConnectionString("Redis");
+                options.InstanceName = "SyncListApi:";
+            });
+            
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IListsRepository, ListsRepository>();
             services.AddScoped<IItemsRepository, ItemsRepository>();
             services.AddScoped<IItemsListRelationsRepository, ItemsListRelationsRepository>();
+            services.AddScoped<IItemsInListCacheManager, ItemsInListCacheManager>();
+            
+            
             
             services.AddMvc().AddJsonOptions(options => {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();

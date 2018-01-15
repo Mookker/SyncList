@@ -62,6 +62,8 @@ namespace SyncList.SyncListApi.Data
             {
                 entity.ToTable("items_lists");
 
+                entity.HasKey(t => new {t.ListId, t.ItemId});
+                
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .ValueGeneratedOnAdd();
@@ -83,6 +85,7 @@ namespace SyncList.SyncListApi.Data
                     .WithMany(p => p.ItemListRelations)
                     .HasForeignKey(d => d.ListId)
                     .OnDelete(DeleteBehavior.Cascade);
+                
             });
             
             modelBuilder.Entity<User>(entity =>
