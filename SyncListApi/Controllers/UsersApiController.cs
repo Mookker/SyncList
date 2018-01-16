@@ -57,6 +57,22 @@ namespace SyncList.SyncListApi.Controllers
         }
         
         /// <summary>
+        /// Gets user by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/v1/users/{id}/lists")]
+        public async Task<IActionResult> GetUserList(int id)
+        {
+            var lists = await _usersRepository.GetUsersList(id);
+            
+            Validator.Assert(lists != null, ValidationAreas.Exists);
+            
+            return Ok(lists);
+        }
+        
+        /// <summary>
         /// Deletes user
         /// </summary>
         /// <param name="id"></param>

@@ -37,5 +37,13 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
 
             return existingUser;
         }
+
+        /// <inheritdoc />
+        public async Task<List<ItemList>> GetUsersList(int userId)
+        {
+            var existingUser = await Table.Include(u => u.Lists).SingleOrDefaultAsync(u => u.Id == userId);
+
+            return existingUser?.Lists;
+        }
     }
 }
