@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
-using SyncList.CommonLibrary.Extensions;
 using SyncList.SyncListApi.CachingManagement.Interfaces;
 using SyncList.SyncListApi.CachingManagement.Models;
 using SyncList.SyncListApi.Models;
@@ -13,31 +11,29 @@ namespace SyncList.SyncListApi.CachingManagement.Implementations
     /// </summary>
     public class ItemsInListCacheManager : IItemsInListCacheManager
     {
-        private readonly IDistributedCache _distributedCache;
+        private readonly IRedisDatabase _redisDatabase;
 
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="distributedCache"></param>
-        public ItemsInListCacheManager(IDistributedCache distributedCache)
+        /// <param name="redisDatabase"></param>
+        public ItemsInListCacheManager(IRedisDatabase redisDatabase)
         {
-            _distributedCache = distributedCache;
+            _redisDatabase = redisDatabase;
         }
         
         /// <inheritdoc />
         public async Task<ListWithItemsCache> AddList(ItemList list)
         {
             var listWithItemsCache = new ListWithItemsCache() {Id = list.Id, Name = list.Name};
-            await _distributedCache.TrySetCacheAsync(CreateCacheKey(list.Id), listWithItemsCache,
-                CreateCacheOptions());
+            await _redisDatabase.SetObjectAsync(CreateCacheKey(list.Id), listWithItemsCache,TimeSpan.FromHours(1));
 
             return listWithItemsCache;
         }
 
         public async Task AddList(ListWithItemsCache list)
         {
-            await _distributedCache.TrySetCacheAsync(CreateCacheKey(list.Id), list,
-                CreateCacheOptions());
+            await _redisDatabase.SetObjectAsync(CreateCacheKey(list.Id), list, TimeSpan.FromHours(1));
 
         }
 
@@ -49,7 +45,7 @@ namespace SyncList.SyncListApi.CachingManagement.Implementations
                 return false;
             
             list.Items.Add(item);
-            await _distributedCache.TrySetCacheAsync(CreateCacheKey(list.Id), list, CreateCacheOptions());
+            await _redisDatabase.SetObjectAsync(CreateCacheKey(list.Id), list, TimeSpan.FromHours(1));
 
             return true;
         }
@@ -57,7 +53,7 @@ namespace SyncList.SyncListApi.CachingManagement.Implementations
         /// <inheritdoc />
         public async Task<ListWithItemsCache> GetList(int listId)
         {
-            var list = await _distributedCache.TryGetCacheAsync<ListWithItemsCache>(CreateCacheKey(listId));
+            var list = await _redisDatabase.GetObjectAsync<ListWithItemsCache>(CreateCacheKey(listId));
 
             return list;
         }
@@ -65,11 +61,6 @@ namespace SyncList.SyncListApi.CachingManagement.Implementations
         private static string CreateCacheKey(int listId)
         {
             return $"list:{listId}";
-        }
-
-        private static DistributedCacheEntryOptions CreateCacheOptions()
-        {
-            return new DistributedCacheEntryOptions() {AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)};
         }
     }
 }

@@ -3,12 +3,13 @@ using System.IO;
 using System.Xml.XPath;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using StackExchange.Redis;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using SyncList.CommonLibrary.Filters;
@@ -52,10 +53,21 @@ namespace SyncList.SyncListApi
                 options.UseSqlite(Configuration.GetConnectionString("SqlLite")));
 
             
+            var sp = services.BuildServiceProvider();
             services.AddDistributedRedisCache(options =>
             {
                 options.Configuration = Configuration.GetConnectionString("Redis");
                 options.InstanceName = "SyncListApi:";
+            });
+            
+            services.AddSingleton<IRedisDatabase>(s =>
+            {
+                var options = ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"));
+                options.ResolveDns = true;
+                var redis = ConnectionMultiplexer.Connect(options);
+                
+                var redisLogger = sp.GetRequiredService<ILoggerFactory>().CreateLogger<RedisDatabase>();
+                return new RedisDatabase(redis.GetDatabase(), redisLogger, $"{ApiName}:");
             });
             
             services.AddScoped<IUsersRepository, UsersRepository>();
