@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SyncList.CommonLibrary.Validation;
@@ -51,7 +52,7 @@ namespace SyncList.SyncListApi.Controllers
         {
             var user = await _usersRepository.Get(id);
             
-            Validator.Assert(user != null, ValidationAreas.Exists);
+            Validator.Assert(user != null, ValidationAreas.NotExists);
             
             return Ok(user);
         }
@@ -67,7 +68,7 @@ namespace SyncList.SyncListApi.Controllers
         {
             var lists = await _usersRepository.GetUsersList(id);
             
-            Validator.Assert(lists != null, ValidationAreas.Exists);
+            Validator.Assert(lists != null, ValidationAreas.NotExists);
             
             return Ok(lists);
         }
@@ -83,7 +84,7 @@ namespace SyncList.SyncListApi.Controllers
         {
             var user = await _usersRepository.Get(id);
             
-            Validator.Assert(user != null, ValidationAreas.Exists);
+            Validator.Assert(user != null, ValidationAreas.NotExists);
 
             await _usersRepository.Delete(user);
             
@@ -100,6 +101,12 @@ namespace SyncList.SyncListApi.Controllers
         public async Task<IActionResult> CreateUser([FromBody]User user)
         {
             Validator.Assert(user != null, ValidationAreas.InputParameters);
+            var users = await _usersRepository.Search(new UserSearchOptions
+            {
+                Email = user.Email
+            });
+            
+            Validator.Assert(users?.Any() != true, ValidationAreas.AlreadyExists);
             
             user = await _usersRepository.Create(user);
 

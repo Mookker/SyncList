@@ -48,7 +48,7 @@ namespace SyncList.SyncListApi.Controllers
         public async Task<IActionResult> GetList(int id)
         {
             var list = await _listsRepository.Get(id);
-            Validator.Assert(list != null, ValidationAreas.Exists);
+            Validator.Assert(list != null, ValidationAreas.NotExists);
             
             return Ok(list);
         }
@@ -64,7 +64,7 @@ namespace SyncList.SyncListApi.Controllers
         {
             var list = await _listsRepository.Get(id);
             
-            Validator.Assert(list != null, ValidationAreas.Exists);
+            Validator.Assert(list != null, ValidationAreas.NotExists);
             
             await _listsRepository.Delete(list);
             

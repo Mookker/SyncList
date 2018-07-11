@@ -50,7 +50,7 @@ namespace SyncList.SyncListApi.Controllers
         {
             var item = await _itemsRepository.Get(id);
 
-            Validator.Assert(item != null, ValidationAreas.Exists);
+            Validator.Assert(item != null, ValidationAreas.NotExists);
 
             return Ok(item);
         }
@@ -65,7 +65,7 @@ namespace SyncList.SyncListApi.Controllers
         public async Task<IActionResult> DeleteItem(int id)
         {
             var item = await _itemsRepository.Get(id);
-            Validator.Assert(item != null, ValidationAreas.Exists);
+            Validator.Assert(item != null, ValidationAreas.NotExists);
             
             await _itemsRepository.Delete(item);
             

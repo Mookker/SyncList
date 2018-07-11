@@ -3,6 +3,7 @@
     public enum ValidationAreas
     {
         InputParameters = 0,
-        Exists
+        NotExists,
+        AlreadyExists
     }
 }

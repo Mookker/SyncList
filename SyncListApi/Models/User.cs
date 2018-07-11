@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SyncList.SyncListApi.Models
 {
@@ -28,6 +29,7 @@ namespace SyncList.SyncListApi.Models
             }
         }
 
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         public string Name { get; set; }
         

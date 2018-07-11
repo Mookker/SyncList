@@ -68,7 +68,7 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
             await _dataContext.SaveChangesAsync();
         }
 
-        /// <inheritdoc />`
+        /// <inheritdoc />
         public async Task<bool> Exists(int id)
         {
             return await Table.AsNoTracking().AnyAsync(t => t.Id == id);

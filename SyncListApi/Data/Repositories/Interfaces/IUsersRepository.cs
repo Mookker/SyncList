@@ -13,5 +13,12 @@ namespace SyncList.SyncListApi.Data.Repositories.Interfaces
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<List<ItemList>> GetUsersList(int userId);
+
+        /// <summary>
+        /// Searches for users by criteria
+        /// </summary>
+        /// <param name="searchOptions"></param>
+        /// <returns></returns>
+        Task<List<User>> Search(UserSearchOptions searchOptions);
     }
 }

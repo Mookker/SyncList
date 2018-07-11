@@ -45,5 +45,18 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
 
             return existingUser?.Lists;
         }
+
+        /// <inheritdoc />
+        public async Task<List<User>> Search(UserSearchOptions searchOptions)
+        {
+            var users = await Table.Where(user =>
+            
+                (!searchOptions.Id.HasValue || user.Id == searchOptions.Id) &&
+                (String.IsNullOrWhiteSpace(searchOptions.Email) || searchOptions.Email == user.Email)
+
+            ).ToListAsync();
+
+            return users;
+        }
     }
 }

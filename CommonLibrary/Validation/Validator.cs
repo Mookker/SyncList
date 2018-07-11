@@ -15,8 +15,10 @@ namespace SyncList.CommonLibrary.Validation
             {
                 case ValidationAreas.InputParameters:
                     throw new InputDataValidationException();
-                case ValidationAreas.Exists:
+                case ValidationAreas.NotExists:
                     throw new ResourceNotFoundException();
+                case ValidationAreas.AlreadyExists:
+                    throw new AlreadyExistsException();
             }
         }
     }

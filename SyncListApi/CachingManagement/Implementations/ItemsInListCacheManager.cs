@@ -31,6 +31,7 @@ namespace SyncList.SyncListApi.CachingManagement.Implementations
             return listWithItemsCache;
         }
 
+        /// <inheritdoc />
         public async Task AddList(ListWithItemsCache list)
         {
             await _redisDatabase.SetObjectAsync(CreateCacheKey(list.Id), list, TimeSpan.FromHours(1));

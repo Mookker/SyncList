@@ -49,8 +49,8 @@ namespace SyncList.SyncListApi.Controllers
             var listExists = await _listsRepository.Exists(listId);
             var itemExists = await _itemsRepository.Exists(itemId);
             
-            Validator.Assert(listExists, ValidationAreas.Exists);
-            Validator.Assert(itemExists, ValidationAreas.Exists);
+            Validator.Assert(listExists, ValidationAreas.NotExists);
+            Validator.Assert(itemExists, ValidationAreas.NotExists);
 
             await _itemsListRelationsRepository.Create(new ItemsListRelation()
             {
@@ -72,7 +72,7 @@ namespace SyncList.SyncListApi.Controllers
         public async Task<IActionResult> GetListWithItems([FromRoute] int listId)
         {
             var existingList = await _listsRepository.Get(listId);
-            Validator.Assert(existingList != null, ValidationAreas.Exists);
+            Validator.Assert(existingList != null, ValidationAreas.NotExists);
 
             var listWithItems = await _itemsInListCacheManager.GetList(listId);
             if (listWithItems == null)
@@ -90,8 +90,7 @@ namespace SyncList.SyncListApi.Controllers
 
                     await _itemsInListCacheManager.AddList(listWithItems);
                 }
-
-                return Ok(listWithItems);
+                
             }
             return Ok(listWithItems);
         }
