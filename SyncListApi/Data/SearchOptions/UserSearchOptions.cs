@@ -1,4 +1,4 @@
-﻿namespace SyncList.SyncListApi.Data.Repositories.Interfaces
+﻿namespace SyncList.SyncListApi.Data.SearchOptions
 {
     /// <summary>
     /// User search options

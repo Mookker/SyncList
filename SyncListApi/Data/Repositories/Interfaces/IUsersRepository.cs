@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SyncList.SyncListApi.Data.SearchOptions;
 using SyncList.SyncListApi.Models;
 
 namespace SyncList.SyncListApi.Data.Repositories.Interfaces

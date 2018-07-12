@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SyncList.SyncListApi.Data.Repositories.Interfaces;
+using SyncList.SyncListApi.Data.SearchOptions;
 using SyncList.SyncListApi.Models;
 
 namespace SyncList.SyncListApi.Data.Repositories.Implementations

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SyncList.CommonLibrary.Validation;
 using SyncList.SyncListApi.Data.Repositories.Interfaces;
+using SyncList.SyncListApi.Data.SearchOptions;
 using SyncList.SyncListApi.Models;
 
 namespace SyncList.SyncListApi.Controllers
