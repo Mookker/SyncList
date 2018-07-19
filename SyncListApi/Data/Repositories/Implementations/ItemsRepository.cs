@@ -14,7 +14,7 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
     /// </summary>
     public class ItemsRepository : BaseRepository<Item>, IItemsRepository
     {
-        public override DbSet<Item> Table => _dataContext.Items;
+        protected override DbSet<Item> Table => _dataContext.Items;
 
         public ItemsRepository(DataContext dataContext) : base(dataContext)
         {

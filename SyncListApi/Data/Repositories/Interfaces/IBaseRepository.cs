@@ -8,10 +8,6 @@ namespace SyncList.SyncListApi.Data.Repositories.Interfaces
 {
     public interface IBaseRepository<T> where T : BaseModel, new()
     {
-        /// <summary>
-        /// DbSet
-        /// </summary>
-        DbSet<T> Table { get; }
             
         /// <summary>
         /// Gets all item

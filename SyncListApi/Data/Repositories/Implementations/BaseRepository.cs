@@ -15,7 +15,7 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
         private IBaseRepository<T> _baseRepositoryImplementation;
 
         /// <inheritdoc />
-        public abstract DbSet<T> Table { get; }
+        protected abstract DbSet<T> Table { get; }
 
         /// <summary>
         /// Constructor

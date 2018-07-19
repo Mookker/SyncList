@@ -14,7 +14,7 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
     /// </summary>
     public class UsersRepository : BaseRepository<User>, IUsersRepository
     {
-        public override DbSet<User> Table => _dataContext.Users;
+        protected override DbSet<User> Table => _dataContext.Users;
 
         /// <summary>
         /// 

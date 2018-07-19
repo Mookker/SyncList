@@ -10,7 +10,7 @@ namespace SyncList.SyncListApi.Data.Repositories.Implementations
 {
     public class ItemsListRelationsRepository : BaseRepository<ItemsListRelation>, IItemsListRelationsRepository
     {
-        public override DbSet<ItemsListRelation> Table => _dataContext.ItemsListRelations;
+        protected override DbSet<ItemsListRelation> Table => _dataContext.ItemsListRelations;
 
         /// <summary>
         /// 
