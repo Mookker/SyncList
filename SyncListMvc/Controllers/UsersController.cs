@@ -1,5 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
+using SyncList.CommonLibrary.Models;
 using SyncListMvc.Services.Interfaces;
 
 namespace SyncListMvc.Controllers
@@ -19,15 +23,17 @@ namespace SyncListMvc.Controllers
             return View(users);
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            throw new System.NotImplementedException();
-        }
+            if (!id.HasValue)
+                return BadRequest();
+            
+            var user = await _usersService.GetUser(id.Value);
 
-        public IActionResult Delete(int id)
-        {
-            throw new System.NotImplementedException();
+            if (user == null)
+                return NotFound();
+            
+            return View(user);
         }
-
     }
 }
