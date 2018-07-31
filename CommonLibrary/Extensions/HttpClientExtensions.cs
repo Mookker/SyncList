@@ -3,25 +3,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SyncList.CommonLibrary.Exceptions;
-using SyncList.CommonLibrary.Extensions;
 
-namespace SyncList.CommonLibrary.Helpers
+namespace SyncList.CommonLibrary.Extensions
 {
-    public interface IHttpRequester
+    public static class HttpClientExtensions
     {
-        Task<R> GetAsync<R>(string uri) where R : class, new ();
-    }
-
-    public class JsonHttpRequester : IHttpRequester
-    {
-        private HttpClient _httpClient;
-        public JsonHttpRequester()
-        {
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Connection.Add("keep-alive");
-        }
-        
-        public async Task<R> GetAsync<R>(string uri) where R : class, new ()
+        public static async Task<R> GetAsync<R>(this HttpClient _httpClient, string uri) where R : class, new ()
         {
             try
             {

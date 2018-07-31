@@ -16,9 +16,7 @@ namespace SyncList.CommonLibrary.Extensions
                 if (response.RequestMessage!= null && !string.IsNullOrWhiteSpace(response.RequestMessage.RequestUri?.AbsolutePath))
                 {
                     var path = response.RequestMessage.RequestUri.AbsolutePath.TrimStart('/');
-                    var segments = path.Split('/');
-                    var serviceName = segments.Length > 0 ? segments[1] : string.Empty;
-                    errorMessage += $" StatusCode: {response.StatusCode}; ServiceName: {serviceName};";
+                    errorMessage += $" StatusCode: {response.StatusCode}; ServiceName: {path};";
                 }
 
                 throw new HttpResponseException(response.StatusCode, errorMessage);

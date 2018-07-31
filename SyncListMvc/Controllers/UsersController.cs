@@ -35,5 +35,49 @@ namespace SyncListMvc.Controllers
             
             return View(user);
         }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (!id.HasValue)
+                return BadRequest();
+            
+            var user = await _usersService.GetUser(id.Value);
+
+            if (user == null)
+                return NotFound();
+            
+            return View(user);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Email")] User user)
+        {
+            if (id != user.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+//                try
+//                {
+//                    _context.Update(user);
+//                    await _context.SaveChangesAsync();
+//                }
+//                catch (DbUpdateConcurrencyException)
+//                {
+//                    if (!MovieExists(user.ID))
+//                    {
+//                        return NotFound();
+//                    }
+//                    else
+//                    {
+//                        throw;
+//                    }
+//                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(user);
+        }
     }
 }

@@ -1,35 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using SyncList.CommonLibrary.Helpers;
+using SyncList.CommonLibrary.Extensions;
 using SyncList.CommonLibrary.Models;
+using SyncListMvc.Constants;
 using SyncListMvc.Services.Interfaces;
 
 namespace SyncListMvc.Services.Implementations
 {
     public class UsersService : IUsersService
     {
-        private IHttpRequester _httpRequester;
-        private string _uri;
+        private HttpClient _httpClient;
 
-        private string UsersApiUri => $"{_uri}/v1/users";
-
-        public UsersService(string uri)
+        public UsersService(IHttpClientFactory clientFactory)
         {
-            _uri = uri;
-            _httpRequester = new JsonHttpRequester();
+            _httpClient = clientFactory.CreateClient(ServicesHttpClientNames.UsersService);
         }
 
         public async Task<User> GetUser(int id)
         {
-            var user = await _httpRequester.GetAsync<User>($"{UsersApiUri}/{id}");
+            var user = await _httpClient.GetAsync<User>($"/{id}");
 
             return user;
         }
 
         public async Task<List<User>> GetUsers()
         {
-            var users = await _httpRequester.GetAsync<List<User>>(UsersApiUri);
+            var users = await _httpClient.GetAsync<List<User>>("");
 
             return users;
         }
