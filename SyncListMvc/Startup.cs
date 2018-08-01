@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 using SyncListMvc.Constants;
 using SyncListMvc.Services.Implementations;
 using SyncListMvc.Services.Interfaces;
@@ -38,7 +39,13 @@ namespace SyncListMvc
             {
                 client.BaseAddress = new Uri("http://localhost:5000/v1/users");
                 client.DefaultRequestHeaders.Connection.Add("keep-alive");
-            });
+            }).AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(new[]
+            {
+                TimeSpan.FromSeconds(1),
+                TimeSpan.FromSeconds(5),
+                TimeSpan.FromSeconds(10)
+            }));
+            
             services.AddSingleton<IUsersService, UsersService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
